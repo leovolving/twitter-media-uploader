@@ -1,0 +1,11 @@
+{
+  "name": "twitter-media-uploader",
+  "version": "1.0.0",
+  "description": "Upload media to thw Twitter API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
