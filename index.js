@@ -28,11 +28,9 @@ class TwitterMediaUploader {
 
     async init(data) {
         const r = data.map(async ({path, type}, i) => {
-            console.log('start init')
             this.mediaPaths[i]= path;
             this.mediaFiles[i]= await this.getFile(i);
             this.mediaSizes[i]= this.mediaFiles[i].length;
-            console.log('size', this.mediaSizes[i]);
             const url = `https://upload.twitter.com/1.1/media/upload.json`;
 
             return request({
@@ -47,7 +45,6 @@ class TwitterMediaUploader {
             })
             .then((res) => {
                 const mediaId = res.media_id_string;
-                console.log('done init', mediaId)
                 this.mediaIds[i] = mediaId;
                 fs.appendFileSync(__dirname + '/media-ids.txt', mediaId + ' => ' + new Date().toISOString() + '\n');
             })
@@ -57,9 +54,7 @@ class TwitterMediaUploader {
     }
 
     async append(chunk, mediaId, i=0) {
-        console.log('start append')
         const url = `https://upload.twitter.com/1.1/media/upload.json`;
-        console.log('chunk size', chunk.length)
 
         return request({
             ...this.baseOptions,
@@ -71,12 +66,10 @@ class TwitterMediaUploader {
                 'segment_index': i,
             }
         })
-        .then(() => console.log('done append'))
         .catch(e => console.error('TwitterMediaUploader: error with append segment ' + i, e.message));
     }
 
     async finalize(mediaId) {
-        console.log('start finalize')
         const url = `https://upload.twitter.com/1.1/media/upload.json`;
 
         return request({
@@ -87,7 +80,6 @@ class TwitterMediaUploader {
                 'media_id': mediaId
             }
         })
-        .then(() => console.log('done finalize'))
         .catch(e => console.error('TwitterMediaUploader: error with finalizing', e.message));
     }
 
@@ -121,7 +113,7 @@ class TwitterMediaUploader {
         return request({
             url: this.mediaPaths[i],
             encoding: null
-        }).catch(e => console.log('error getting external media file from ' + this.mediaPath, e.message))
+        }).catch(e => console.error('error getting external media file from ' + this.mediaPath, e.message))
     }
 
     // https://gist.github.com/shiawuen/1534477
@@ -137,13 +129,11 @@ class TwitterMediaUploader {
                 if (size - end < 0) {
                     end = size;
                 }
-                console.log('end', end)
 
                 const s = this.sliceFile(this.mediaFiles[i], start, end);
 
                 await this.append(s, mediaId, count);
                 count++;
-                console.log('end < size and typeof', end < size, typeof end, typeof size)
 
             }
 

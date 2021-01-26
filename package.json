@@ -4,8 +4,13 @@
   "description": "Upload media to thw Twitter API",
   "main": "index.js",
   "scripts": {
+    "demo": "node demo/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "request": "^2.88.2",
+    "request-promise-native": "^1.0.9"
+  }
 }
